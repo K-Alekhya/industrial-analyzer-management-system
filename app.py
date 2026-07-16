@@ -85,10 +85,21 @@ def log_activity(user, action):
         print(f"Error logging activity: {e}")
 
 
-# Create database tables only in development
-if not os.environ.get('DATABASE_URL'):
-    with app.app_context():
-        db.create_all()
+# Create database tables and default admin user
+with app.app_context():
+    db.create_all()
+
+    if User.query.filter_by(username="admin").first() is None:
+        admin = User(username="admin", role="Admin")
+        admin.set_password("admin123")
+        db.session.add(admin)
+
+    if User.query.filter_by(username="engineer").first() is None:
+        engineer = User(username="engineer", role="Engineer")
+        engineer.set_password("eng123")
+        db.session.add(engineer)
+
+    db.session.commit()
 
 
 if __name__ == '__main__':
