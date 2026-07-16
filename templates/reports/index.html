@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Industrial Analyzer Management System{% endblock %}
+
+{% block content %}
+<h2><i class="bi bi-file-earmark-bar-graph"></i> Reports</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-cpu"></i> Sensors Report</h5>
+                <p class="card-text">Export all sensor data including installation details, calibration dates, and status.</p>
+                <form action="{{ url_for('reports.export', format='excel') }}" method="GET">
+                    <input type="hidden" name="type" value="sensors">
+                    <button type="submit" class="btn btn-success mb-2 w-100">
+                        <i class="bi bi-file-earmark-excel"></i> Export Excel
+                    </button>
+                </form>
+                <form action="{{ url_for('reports.export', format='csv') }}" method="GET">
+                    <input type="hidden" name="type" value="sensors">
+                    <button type="submit" class="btn btn-info mb-2 w-100">
+                        <i class="bi bi-file-earmark-csv"></i> Export CSV
+                    </button>
+                </form>
+                <form action="{{ url_for('reports.export', format='pdf') }}" method="GET">
+                    <input type="hidden" name="type" value="sensors">
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-tools"></i> Maintenance Report</h5>
+                <p class="card-text">Export maintenance ticket data including issues, priorities, and completion status.</p>
+                <form action="{{ url_for('reports.export', format='excel') }}" method="GET">
+                    <input type="hidden" name="type" value="maintenance">
+                    <button type="submit" class="btn btn-success mb-2 w-100">
+                        <i class="bi bi-file-earmark-excel"></i> Export Excel
+                    </button>
+                </form>
+                <form action="{{ url_for('reports.export', format='csv') }}" method="GET">
+                    <input type="hidden" name="type" value="maintenance">
+                    <button type="submit" class="btn btn-info mb-2 w-100">
+                        <i class="bi bi-file-earmark-csv"></i> Export CSV
+                    </button>
+                </form>
+                <form action="{{ url_for('reports.export', format='pdf') }}" method="GET">
+                    <input type="hidden" name="type" value="maintenance">
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-calendar-check"></i> Calibration Report</h5>
+                <p class="card-text">Export calibration records including dates, technicians, and remarks.</p>
+                <form action="{{ url_for('reports.export', format='excel') }}" method="GET">
+                    <input type="hidden" name="type" value="calibration">
+                    <button type="submit" class="btn btn-success mb-2 w-100">
+                        <i class="bi bi-file-earmark-excel"></i> Export Excel
+                    </button>
+                </form>
+                <form action="{{ url_for('reports.export', format='csv') }}" method="GET">
+                    <input type="hidden" name="type" value="calibration">
+                    <button type="submit" class="btn btn-info mb-2 w-100">
+                        <i class="bi bi-file-earmark-csv"></i> Export CSV
+                    </button>
+                </form>
+                <form action="{{ url_for('reports.export', format='pdf') }}" method="GET">
+                    <input type="hidden" name="type" value="calibration">
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-funnel"></i> Filter Options</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">Add filters to the export URLs above by appending query parameters:</p>
+        <ul>
+            <li><strong>start_date</strong> - Filter by start date (YYYY-MM-DD)</li>
+            <li><strong>end_date</strong> - Filter by end date (YYYY-MM-DD)</li>
+            <li><strong>area</strong> - Filter by area</li>
+        </ul>
+        <p class="text-muted">Example: <code>?type=sensors&start_date=2024-01-01&end_date=2024-12-31&area=Production</code></p>
+    </div>
+</div>
+{% endblock %}

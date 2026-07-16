@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Add Calibration Record - Industrial Analyzer Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-plus-circle"></i> Add Calibration Record</h2>
+    <a href="{{ url_for('calibration.index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="sensor_id" class="form-label">Sensor *</label>
+                <select class="form-select" id="sensor_id" name="sensor_id" required>
+                    <option value="">Select Sensor</option>
+                    {% for sensor in sensors %}
+                    <option value="{{ sensor.sensor_id }}">{{ sensor.sensor_id }} - {{ sensor.sensor_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="last_calibration" class="form-label">Last Calibration *</label>
+                    <input type="date" class="form-control" id="last_calibration" name="last_calibration" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="next_calibration" class="form-label">Next Calibration *</label>
+                    <input type="date" class="form-control" id="next_calibration" name="next_calibration" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="calibrated_by" class="form-label">Calibrated By *</label>
+                <input type="text" class="form-control" id="calibrated_by" name="calibrated_by" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="remarks" class="form-label">Remarks</label>
+                <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{ url_for('calibration.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Add Record</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

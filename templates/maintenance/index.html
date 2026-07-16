@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance - Industrial Analyzer Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-tools"></i> Maintenance Tickets</h2>
+    <a href="{{ url_for('maintenance.add') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Raise Ticket
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-4">
+                <select class="form-select" name="status">
+                    <option value="">All Status</option>
+                    <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="priority">
+                    <option value="">All Priority</option>
+                    <option value="High" {% if priority_filter == 'High' %}selected{% endif %}>High</option>
+                    <option value="Medium" {% if priority_filter == 'Medium' %}selected{% endif %}>Medium</option>
+                    <option value="Low" {% if priority_filter == 'Low' %}selected{% endif %}>Low</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+                <a href="{{ url_for('maintenance.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tickets Table -->
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Sensor ID</th>
+                        <th>Issue</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assigned Engineer</th>
+                        <th>Raised Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets.items %}
+                    <tr>
+                        <td>{{ ticket.id }}</td>
+                        <td>{{ ticket.sensor_id }}</td>
+                        <td>{{ ticket.issue }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if ticket.priority == 'High' else 'warning' if ticket.priority == 'Medium' else 'info' }}">
+                                {{ ticket.priority }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if ticket.status == 'Pending' else 'warning' if ticket.status == 'In Progress' else 'success' }}">
+                                {{ ticket.status }}
+                            </span>
+                        </td>
+                        <td>{{ ticket.assigned_engineer or 'N/A' }}</td>
+                        <td>{{ ticket.raised_date.strftime('%Y-%m-%d') if ticket.raised_date else 'N/A' }}</td>
+                        <td>
+                            <a href="{{ url_for('maintenance.view', id=ticket.id) }}" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('maintenance.edit', id=ticket.id) }}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{{ url_for('maintenance.delete', id=ticket.id) }}" class="btn btn-sm btn-danger" 
+                               onclick="return confirm('Are you sure you want to delete this ticket?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No maintenance tickets found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if tickets.pages > 1 %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if tickets.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('maintenance.index', page=tickets.prev_num, status=status_filter, priority=priority_filter) }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in tickets.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != tickets.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('maintenance.index', page=page_num, status=status_filter, priority=priority_filter) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if tickets.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('maintenance.index', page=tickets.next_num, status=status_filter, priority=priority_filter) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

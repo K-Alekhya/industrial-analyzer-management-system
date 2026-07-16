@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Maintenance Ticket - Industrial Analyzer Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-pencil"></i> Edit Maintenance Ticket</h2>
+    <a href="{{ url_for('maintenance.index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="sensor_id" class="form-label">Sensor *</label>
+                    <select class="form-select" id="sensor_id" name="sensor_id" required>
+                        <option value="">Select Sensor</option>
+                        {% for sensor in sensors %}
+                        <option value="{{ sensor.sensor_id }}" {% if ticket.sensor_id == sensor.sensor_id %}selected{% endif %}>
+                            {{ sensor.sensor_id }} - {{ sensor.sensor_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="priority" class="form-label">Priority *</label>
+                    <select class="form-select" id="priority" name="priority" required>
+                        <option value="">Select Priority</option>
+                        <option value="High" {% if ticket.priority == 'High' %}selected{% endif %}>High</option>
+                        <option value="Medium" {% if ticket.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="Low" {% if ticket.priority == 'Low' %}selected{% endif %}>Low</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="issue" class="form-label">Issue *</label>
+                <input type="text" class="form-control" id="issue" name="issue" value="{{ ticket.issue }}" required>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="status" class="form-label">Status *</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="">Select Status</option>
+                        <option value="Pending" {% if ticket.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="In Progress" {% if ticket.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Completed" {% if ticket.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="assigned_engineer" class="form-label">Assigned Engineer</label>
+                    <input type="text" class="form-control" id="assigned_engineer" name="assigned_engineer" 
+                           value="{{ ticket.assigned_engineer or '' }}">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3">{{ ticket.description or '' }}</textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="root_cause" class="form-label">Root Cause</label>
+                <textarea class="form-control" id="root_cause" name="root_cause" rows="3">{{ ticket.root_cause or '' }}</textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="corrective_action" class="form-label">Corrective Action</label>
+                <textarea class="form-control" id="corrective_action" name="corrective_action" rows="3">{{ ticket.corrective_action or '' }}</textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{ url_for('maintenance.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Update Ticket</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

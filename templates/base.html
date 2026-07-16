@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Industrial Analyzer Management System{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+{% if current_user.is_authenticated %}
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <nav class="sidebar bg-dark text-white">
+
+        <div class="sidebar-header p-3">
+            <h5 class="mb-0">
+                <i class="bi bi-gear-wide-connected"></i>
+                Analyzer Mgmt
+            </h5>
+        </div>
+
+        <ul class="nav flex-column">
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'dashboard' in request.endpoint else '' }}"
+                   href="{{ url_for('dashboard.index') }}">
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'sensors' in request.endpoint else '' }}"
+                   href="{{ url_for('sensors.index') }}">
+                    <i class="bi bi-cpu"></i>
+                    Sensors
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'maintenance' in request.endpoint else '' }}"
+                   href="{{ url_for('maintenance.index') }}">
+                    <i class="bi bi-tools"></i>
+                    Maintenance
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'calibration' in request.endpoint else '' }}"
+                   href="{{ url_for('calibration.index') }}">
+                    <i class="bi bi-calendar-check"></i>
+                    Calibration
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'reports' in request.endpoint else '' }}"
+                   href="{{ url_for('reports.index') }}">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    Reports
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint and 'search' in request.endpoint else '' }}"
+                   href="{{ url_for('search.index') }}">
+                    <i class="bi bi-search"></i>
+                    Search
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer mt-auto p-3">
+
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-person-circle me-2"></i>
+                <span>{{ current_user.username }}</span>
+            </div>
+
+            <small class="text-muted">{{ current_user.role }}</small>
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="btn btn-outline-light btn-sm mt-2 w-100">
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+            <div class="container-fluid">
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+                <span class="navbar-brand ms-3">
+                    <i class="bi bi-building"></i>
+                    Industrial Analyzer Management System
+                </span>
+
+            </div>
+
+        </nav>
+
+        <div class="container-fluid p-4">
+
+{% else %}
+
+<div class="container mt-4">
+
+{% endif %}
+
+    <!-- Flash Messages -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+
+                    {{ message }}
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                    </button>
+
+                </div>
+
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- ONLY CONTENT BLOCK -->
+    {% block content %}{% endblock %}
+
+{% if current_user.is_authenticated %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% else %}
+
+</div>
+
+{% endif %}
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- Custom JS -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

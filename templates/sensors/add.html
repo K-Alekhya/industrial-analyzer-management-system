@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Add Sensor - Industrial Analyzer Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-plus-circle"></i> Add Sensor</h2>
+    <a href="{{ url_for('sensors.index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="sensor_id" class="form-label">Sensor ID *</label>
+                    <input type="text" class="form-control" id="sensor_id" name="sensor_id" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="sensor_name" class="form-label">Sensor Name *</label>
+                    <input type="text" class="form-control" id="sensor_name" name="sensor_name" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="analyzer_type" class="form-label">Analyzer Type *</label>
+                    <input type="text" class="form-control" id="analyzer_type" name="analyzer_type" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="area" class="form-label">Area *</label>
+                    <input type="text" class="form-control" id="area" name="area" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="exact_location" class="form-label">Exact Location *</label>
+                <input type="text" class="form-control" id="exact_location" name="exact_location" required>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="manufacturer" class="form-label">Manufacturer *</label>
+                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="model" class="form-label">Model *</label>
+                    <input type="text" class="form-control" id="model" name="model" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="serial_number" class="form-label">Serial Number *</label>
+                    <input type="text" class="form-control" id="serial_number" name="serial_number" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="installation_date" class="form-label">Installation Date *</label>
+                    <input type="date" class="form-control" id="installation_date" name="installation_date" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="last_calibration" class="form-label">Last Calibration</label>
+                    <input type="date" class="form-control" id="last_calibration" name="last_calibration">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="next_calibration" class="form-label">Next Calibration</label>
+                    <input type="date" class="form-control" id="next_calibration" name="next_calibration">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="working_condition" class="form-label">Working Condition *</label>
+                    <select class="form-select" id="working_condition" name="working_condition" required>
+                        <option value="">Select Condition</option>
+                        <option value="Working">Working</option>
+                        <option value="Faulty">Faulty</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="status" class="form-label">Status *</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="">Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="image" class="form-label">Sensor Image</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            </div>
+            
+            <div class="mb-3">
+                <label for="remarks" class="form-label">Remarks</label>
+                <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{ url_for('sensors.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Add Sensor</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Sensors - Industrial Analyzer Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-cpu"></i> Sensors</h2>
+    <a href="{{ url_for('sensors.add') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Sensor
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="search" placeholder="Search sensors..." value="{{ search }}">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="analyzer_type">
+                    <option value="">All Types</option>
+                    {% for (type,) in analyzer_types %}
+                    <option value="{{ type }}" {% if analyzer_type_filter == type %}selected{% endif %}>{{ type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="area">
+                    <option value="">All Areas</option>
+                    {% for (area,) in areas %}
+                    <option value="{{ area }}" {% if area_filter == area %}selected{% endif %}>{{ area }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select" name="status">
+                    <option value="">All Status</option>
+                    <option value="Active" {% if status_filter == 'Active' %}selected{% endif %}>Active</option>
+                    <option value="Inactive" {% if status_filter == 'Inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+                <a href="{{ url_for('sensors.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Sensors Table -->
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sensor ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Area</th>
+                        <th>Condition</th>
+                        <th>Status</th>
+                        <th>Next Calibration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sensor in sensors.items %}
+                    <tr>
+                        <td>{{ sensor.sensor_id }}</td>
+                        <td>{{ sensor.sensor_name }}</td>
+                        <td>{{ sensor.analyzer_type }}</td>
+                        <td>{{ sensor.area }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if sensor.working_condition == 'Working' else 'danger' }}">
+                                {{ sensor.working_condition }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{{ 'primary' if sensor.status == 'Active' else 'secondary' }}">
+                                {{ sensor.status }}
+                            </span>
+                        </td>
+                        <td>{{ sensor.next_calibration.strftime('%Y-%m-%d') if sensor.next_calibration else 'N/A' }}</td>
+                        <td>
+                            <a href="{{ url_for('sensors.view', id=sensor.id) }}" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('sensors.edit', id=sensor.id) }}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{{ url_for('sensors.delete', id=sensor.id) }}" class="btn btn-sm btn-danger" 
+                               onclick="return confirm('Are you sure you want to delete this sensor?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No sensors found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if sensors.pages > 1 %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if sensors.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('sensors.index', page=sensors.prev_num, search=search, analyzer_type=analyzer_type_filter, area=area_filter, status=status_filter) }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in sensors.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num != sensors.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('sensors.index', page=page_num, search=search, analyzer_type=analyzer_type_filter, area=area_filter, status=status_filter) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if sensors.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('sensors.index', page=sensors.next_num, search=search, analyzer_type=analyzer_type_filter, area=area_filter, status=status_filter) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
